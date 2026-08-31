@@ -1,0 +1,15 @@
+{
+  "name": "Shoes Empire",
+  "short_name": "Shoes Empire",
+  "description": "Sneakers authentiques à Cotonou — commande via WhatsApp, MTN MoMo, Moov Money ou Celtiis Cash.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0B0B0E",
+  "theme_color": "#0B0B0E",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
