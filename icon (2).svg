@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#14110d"/>
+  <text x="256" y="235" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-weight="700"
+        font-size="140" fill="#f2ebdc" text-anchor="middle">SE</text>
+  <rect x="146" y="300" width="220" height="8" fill="#cc9a44"/>
+  <text x="256" y="360" font-family="Courier New, monospace" font-size="26" letter-spacing="4"
+        fill="#cc9a44" text-anchor="middle">EMPIRE</text>
+</svg>

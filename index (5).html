@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shoes Empire — Sneakers à Cotonou</title>
+<meta name="description" content="Shoes Empire — La maison sneakers de Cotonou. Nike, New Balance, Air Jordan, Adidas. Sélection vérifiée, livraison partout au Bénin.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#14110d">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Shoes Empire">
+<style>
+  :root{
+    --ink:#14110d;
+    --surface:#1c1710;
+    --surface-2:#241d14;
+    --line:#362c1e;
+    --paper:#f4ecdc;
+    --gold:#cc9a44;
+    --gold-soft:#e9c887;
+    --crimson:#a8402f;
+    --text:#f2ebdc;
+    --muted:#a89d89;
+    --radius:5px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--ink); color:var(--text);
+    font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Fraunces',serif; margin:0;}
+  a{color:inherit; text-decoration:none;}
+  .serif{font-family:'Fraunces',serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 24px;}
+  img{max-width:100%; display:block;}
+
+  /* ---------- PROMO / COUNTDOWN BAR ---------- */
+  .promo-bar{
+    background:var(--gold); color:#20180a; text-align:center; padding:11px 16px;
+    font-family:'IBM Plex Mono'; font-size:12.5px; font-weight:600; letter-spacing:.01em;
+    display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+  }
+  .promo-bar .countdown{font-weight:700; background:rgba(20,17,13,.15); padding:2px 8px; border-radius:100px;}
+
+  /* ---------- NAV ---------- */
+  nav{position:sticky; top:0; z-index:100; background:rgba(20,17,13,.9); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:72px;}
+  .logo{font-family:'Fraunces'; font-weight:700; font-size:21px; display:flex; align-items:center; gap:8px;}
+  .logo span{color:var(--gold); font-style:italic;}
+  .nav-links{display:flex; gap:30px; font-size:14px; font-weight:500;}
+  .nav-links a{color:var(--muted); transition:color .2s;}
+  .nav-links a:hover{color:var(--text);}
+  @media(max-width:860px){ .nav-links{display:none;} }
+
+  .nav-icons{display:flex; align-items:center; gap:12px;}
+  .icon-btn{
+    position:relative; background:none; border:1px solid var(--line); color:var(--text);
+    width:40px; height:40px; border-radius:100px; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:border-color .2s;
+  }
+  .icon-btn:hover{border-color:var(--gold);}
+  .icon-btn svg{width:17px; height:17px;}
+  .icon-badge{
+    position:absolute; top:-5px; right:-5px; background:var(--crimson); color:var(--text);
+    font-family:'IBM Plex Mono'; font-size:10px; font-weight:700; min-width:17px; height:17px;
+    border-radius:100px; display:flex; align-items:center; justify-content:center; padding:0 4px;
+  }
+  .nav-cta{
+    background:var(--gold); color:#20180a; font-weight:700; font-size:13px;
+    padding:10px 18px; border-radius:var(--radius);
+  }
+  @media(max-width:480px){
+    .nav-icons{gap:6px;}
+    .icon-btn{width:36px; height:36px;}
+    .nav-cta{padding:9px 12px; font-size:12px;}
+    .logo{font-size:18px;}
+  }
+
+  /* ---------- NOTIFICATIONS DROPDOWN ---------- */
+  .notif-panel{
+    position:absolute; top:56px; right:0; width:330px; max-width:88vw;
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:0 30px 60px rgba(0,0,0,.5); opacity:0; pointer-events:none; transform:translateY(-8px);
+    transition:all .2s; z-index:120;
+  }
+  .notif-panel.open{opacity:1; pointer-events:auto; transform:translateY(0);}
+  .notif-head{padding:16px 18px; border-bottom:1px solid var(--line); font-weight:700; font-size:13.5px; text-transform:uppercase; letter-spacing:.03em; color:var(--muted);}
+  .notif-list{max-height:340px; overflow-y:auto;}
+  .notif-item{padding:14px 18px; border-bottom:1px solid var(--line); font-size:13px; line-height:1.5;}
+  .notif-item .t{font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--gold); display:block; margin-top:4px;}
+  .notif-empty{padding:30px 18px; text-align:center; color:var(--muted); font-size:13px;}
+  .nav-icon-wrap{position:relative;}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:15px 26px; border-radius:var(--radius); font-weight:700; font-size:14px; transition:transform .15s ease, background .2s;}
+  .btn-primary{background:var(--gold); color:#20180a;}
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-outline{border:1px solid var(--line); color:var(--text);}
+  .btn-outline:hover{border-color:var(--gold-soft); color:var(--gold-soft);}
+  .btn-block{width:100%; justify-content:center; display:flex;}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative; padding:90px 0 60px; border-bottom:1px solid var(--line); overflow:hidden;}
+  .hero-collage{position:absolute; inset:0; z-index:-1; display:grid; grid-template-columns:repeat(6,1fr); opacity:.4; filter:saturate(.4) sepia(.15) contrast(1.05);}
+  .hero-collage img{width:100%; height:100%; object-fit:cover;}
+  .hero::before{content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,17,13,.4), var(--ink) 85%); z-index:-1;}
+  .hero-inner{display:grid; grid-template-columns:1.3fr .7fr; gap:50px; align-items:end;}
+  .eyebrow{display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono'; font-size:12px; color:var(--gold-soft); margin-bottom:20px;}
+  .eyebrow::before{content:"—";}
+  .hero h1{font-size:clamp(42px,7vw,80px); line-height:1.02; font-weight:600; font-style:italic; letter-spacing:-.01em;}
+  .hero h1 b{font-weight:900; font-style:normal; display:block;}
+  .hero p.lede{font-size:16.5px; color:var(--muted); max-width:440px; margin:24px 0 30px; line-height:1.65;}
+  .hero-cta{display:flex; gap:14px; flex-wrap:wrap;}
+  .founder-note{
+    background:var(--paper); color:#20180a; padding:22px; border-radius:3px; transform:rotate(-2deg);
+    box-shadow:0 24px 50px rgba(0,0,0,.4); justify-self:end; width:250px;
+  }
+  .founder-note .fn-label{font-family:'IBM Plex Mono'; font-size:10.5px; text-transform:uppercase; color:#6b5c3d; letter-spacing:.04em;}
+  .founder-note p{font-family:'Fraunces'; font-style:italic; font-size:16px; line-height:1.4; margin:10px 0;}
+  .founder-note .fn-sign{font-family:'IBM Plex Mono'; font-size:11px; border-top:1px dashed #c9b98e; padding-top:10px; margin-top:6px;}
+  @media(max-width:820px){ .hero-inner{grid-template-columns:1fr;} .founder-note{justify-self:start; transform:none;} }
+
+  .marquee{border-bottom:1px solid var(--line); background:var(--surface); overflow:hidden; white-space:nowrap; padding:13px 0;}
+  .marquee span{display:inline-block; font-family:'IBM Plex Mono'; font-size:12.5px; letter-spacing:.04em; color:var(--muted); padding-right:40px; animation:scroll 30s linear infinite;}
+  .marquee span b{color:var(--gold);}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media(prefers-reduced-motion:reduce){.marquee span{animation:none;}}
+
+  section{padding:76px 0;}
+  .sec-head{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:34px; gap:20px; flex-wrap:wrap;}
+  .sec-head .eyebrow-sm{font-family:'IBM Plex Mono'; font-size:11.5px; color:var(--gold); display:block; margin-bottom:8px;}
+  .sec-head h2{font-size:clamp(26px,3.6vw,38px); font-weight:600; font-style:italic;}
+  .sec-sub{color:var(--muted); max-width:440px; font-size:14.5px; line-height:1.6;}
+
+  /* ---------- AUTHORITY STRIP ---------- */
+  .trust{display:grid; grid-template-columns:repeat(4,1fr); gap:2px; background:var(--line); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .trust > div{background:var(--surface); padding:26px 20px; text-align:center;}
+  .trust .big{font-family:'Fraunces'; font-weight:700; font-size:25px; color:var(--gold);}
+  .trust .small{font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--muted); text-transform:uppercase; margin-top:6px;}
+  @media(max-width:720px){.trust{grid-template-columns:repeat(2,1fr);}}
+
+  /* ---------- FILTERS / GRID ---------- */
+  .filters{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:32px;}
+  .filter-btn{font-family:'IBM Plex Mono'; font-size:11.5px; text-transform:uppercase; padding:9px 16px; border-radius:100px; border:1px solid var(--line); color:var(--muted); cursor:pointer; background:transparent; transition:all .2s;}
+  .filter-btn:hover{color:var(--text); border-color:var(--text);}
+  .filter-btn.active{background:var(--gold); color:#20180a; border-color:var(--gold);}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(258px,1fr)); gap:20px;}
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:3px; overflow:hidden; position:relative; transition:border-color .2s, transform .2s; display:flex; flex-direction:column;}
+  .card:hover{border-color:#4a3b26; transform:translateY(-3px);}
+  .card-img{aspect-ratio:1/1; overflow:hidden; background:#000; position:relative;}
+  .card-img img{width:100%; height:100%; object-fit:cover; transition:transform .5s ease;}
+  .card:hover .card-img img{transform:scale(1.06);}
+  .card-cat{position:absolute; top:10px; left:10px; font-family:'IBM Plex Mono'; font-size:10px; text-transform:uppercase; background:rgba(20,17,13,.75); color:var(--gold-soft); padding:5px 9px; border-radius:100px; backdrop-filter:blur(4px);}
+  .card-pick{position:absolute; top:10px; right:44px; background:var(--crimson); color:var(--text); font-family:'IBM Plex Mono'; font-size:9.5px; font-weight:700; text-transform:uppercase; padding:5px 9px; border-radius:100px;}
+  .card-new{position:absolute; top:10px; right:44px; background:var(--gold); color:#20180a; font-family:'IBM Plex Mono'; font-size:9.5px; font-weight:700; text-transform:uppercase; padding:5px 9px; border-radius:100px;}
+  .wish-btn{position:absolute; top:8px; right:8px; width:30px; height:30px; border-radius:100px; background:rgba(20,17,13,.6); border:1px solid rgba(255,255,255,.15); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(4px);}
+  .wish-btn svg{width:15px; height:15px;}
+  .wish-btn.active{color:var(--crimson);}
+  .wish-btn.active svg{fill:var(--crimson);}
+  .card-body{padding:16px 16px 18px; display:flex; flex-direction:column; gap:11px; flex:1;}
+  .card-name{font-size:14.5px; font-weight:700; line-height:1.3;}
+  .card-sizes{font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--muted);}
+  .card-sizes.low{color:var(--crimson);}
+  .card-foot{display:flex; align-items:center; justify-content:space-between; margin-top:auto;}
+  .price-tag{font-family:'IBM Plex Mono'; font-weight:700; font-size:15.5px; color:var(--gold);}
+  .price-tag.tbd{color:var(--muted); font-size:11.5px;}
+  .card-actions{display:flex; gap:8px;}
+  .add-cart-btn{display:flex; align-items:center; justify-content:center; background:transparent; border:1px solid var(--line); color:var(--text); width:38px; border-radius:var(--radius); cursor:pointer; transition:border-color .2s;}
+  .add-cart-btn:hover{border-color:var(--gold); color:var(--gold);}
+  .add-cart-btn svg{width:15px; height:15px;}
+  .order-btn{display:flex; align-items:center; gap:6px; background:var(--gold); color:#20180a; font-weight:700; font-size:11.5px; padding:9px 13px; border-radius:var(--radius); text-transform:uppercase; white-space:nowrap; transition:transform .15s;}
+  .order-btn:hover{transform:translateY(-2px);}
+  .order-btn svg{width:13px; height:13px;}
+  .reserve-btn{display:flex; align-items:center; gap:6px; background:transparent; border:1px solid var(--gold); color:var(--gold); font-weight:700; font-size:11.5px; padding:9px 13px; border-radius:var(--radius); text-transform:uppercase; white-space:nowrap; transition:all .15s;}
+  .reserve-btn:hover{background:var(--gold); color:#20180a;}
+
+  /* ---------- RECIPROCITY / GIFT BANNER ---------- */
+  .gift-banner{background:linear-gradient(120deg, var(--surface), var(--surface-2)); border:1px solid var(--gold); border-radius:3px; padding:26px 30px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; justify-content:space-between;}
+  .gift-banner .gt{font-family:'Fraunces'; font-style:italic; font-size:20px;}
+  .gift-banner .gd{color:var(--muted); font-size:13.5px; max-width:420px;}
+
+  /* ---------- QUIZ (commitment device) ---------- */
+  .quiz-box{background:var(--surface); border:1px solid var(--line); border-radius:3px; padding:34px; max-width:640px;}
+  .quiz-q{font-family:'Fraunces'; font-style:italic; font-size:20px; margin-bottom:18px;}
+  .quiz-opts{display:flex; gap:10px; flex-wrap:wrap;}
+  .quiz-opt{font-family:'IBM Plex Mono'; font-size:12.5px; padding:11px 18px; border:1px solid var(--line); border-radius:100px; cursor:pointer; background:none; color:var(--text); transition:all .2s;}
+  .quiz-opt:hover{border-color:var(--gold);}
+  .quiz-progress{display:flex; gap:6px; margin-bottom:22px;}
+  .quiz-progress span{height:3px; flex:1; background:var(--line); border-radius:2px; overflow:hidden;}
+  .quiz-progress span i{display:block; height:100%; width:0; background:var(--gold); transition:width .3s;}
+  .quiz-result{display:none;}
+  .quiz-result.show{display:block;}
+  .quiz-step.hide{display:none;}
+
+  /* ---------- MEMBERSHIP / LOYALTY ---------- */
+  .member-card{
+    background:linear-gradient(135deg,#241d14,#14110d); border:1px solid var(--gold); border-radius:8px;
+    padding:32px; position:relative; overflow:hidden; max-width:520px;
+  }
+  .member-card::after{content:""; position:absolute; inset:0; background:repeating-linear-gradient(115deg, transparent 0 40px, rgba(204,154,68,.05) 40px 80px); pointer-events:none;}
+  .member-card .mc-label{font-family:'IBM Plex Mono'; font-size:10.5px; text-transform:uppercase; color:var(--gold-soft); letter-spacing:.06em;}
+  .member-card .mc-points{font-family:'Fraunces'; font-weight:700; font-size:38px; margin:10px 0 4px;}
+  .member-card .mc-tier{font-family:'IBM Plex Mono'; font-size:12px; color:var(--muted);}
+  .tier-track{display:flex; gap:6px; margin-top:20px;}
+  .tier-track > div{flex:1; height:5px; border-radius:3px; background:var(--line);}
+  .tier-track > div.reached{background:var(--gold);}
+  .tier-labels{display:flex; justify-content:space-between; font-family:'IBM Plex Mono'; font-size:10px; color:var(--muted); margin-top:8px;}
+
+  /* ---------- FOUNDER STORY ---------- */
+  .story{display:grid; grid-template-columns:.9fr 1.1fr; gap:50px; align-items:center;}
+  .story-img{border-radius:3px; overflow:hidden; aspect-ratio:4/5;}
+  .story-img img{width:100%; height:100%; object-fit:cover;}
+  .story p{color:var(--muted); font-size:15px; line-height:1.75; margin-bottom:16px;}
+  .story .sig{font-family:'Fraunces'; font-style:italic; font-size:22px; margin-top:20px;}
+  @media(max-width:820px){.story{grid-template-columns:1fr;}}
+
+  /* ---------- REVIEWS ---------- */
+  .review-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  .review-card{background:var(--surface); border:1px solid var(--line); border-radius:3px; padding:22px; display:flex; flex-direction:column; gap:14px;}
+  .review-photo{border-radius:3px; overflow:hidden; aspect-ratio:16/10;}
+  .review-photo img{width:100%; height:100%; object-fit:cover;}
+  .review-stars{color:var(--gold); font-size:13px; letter-spacing:2px;}
+  .review-quote{font-size:13.5px; line-height:1.6; margin:0; flex:1;}
+  .review-who{font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--muted); text-transform:uppercase;}
+  .review-card-cta{align-items:flex-start; justify-content:center; border-style:dashed;}
+  @media(max-width:820px){.review-grid{grid-template-columns:1fr;}}
+
+  /* ---------- STEPS ---------- */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--line); border:1px solid var(--line);}
+  .step{background:var(--ink); padding:30px 26px;}
+  .step .n{font-family:'IBM Plex Mono'; color:var(--gold); font-size:12.5px;}
+  .step h3{font-size:18px; margin:14px 0 10px; font-weight:600;}
+  .step p{color:var(--muted); font-size:13.5px; line-height:1.6; margin:0;}
+  @media(max-width:720px){.steps{grid-template-columns:1fr;}}
+
+  /* ---------- FAQ ---------- */
+  .faq-item{border-bottom:1px solid var(--line);}
+  .faq-q{width:100%; text-align:left; background:none; border:none; color:var(--text); font-weight:600; font-size:14.5px; padding:20px 0; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:20px;}
+  .faq-q .plus{font-family:'IBM Plex Mono'; color:var(--gold); font-size:18px; transition:transform .25s;}
+  .faq-item.open .plus{transform:rotate(45deg);}
+  .faq-a{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+  .faq-a p{color:var(--muted); font-size:13.5px; line-height:1.7; padding-bottom:20px; margin:0; max-width:620px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:56px 0 28px; border-top:1px solid var(--line);}
+  .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px; margin-bottom:46px;}
+  footer h4{font-family:'IBM Plex Mono'; font-size:11px; text-transform:uppercase; color:var(--muted); margin-bottom:16px;}
+  footer .foot-logo{font-family:'Fraunces'; font-weight:700; font-size:22px; margin-bottom:12px;}
+  footer .foot-logo span{color:var(--gold); font-style:italic;}
+  footer p{color:var(--muted); font-size:13.5px; line-height:1.7; max-width:320px;}
+  footer ul{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;}
+  footer ul a{font-size:13.5px;}
+  footer ul a:hover{color:var(--gold);}
+  .foot-bottom{display:flex; justify-content:space-between; padding-top:22px; border-top:1px solid var(--line); font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--muted); flex-wrap:wrap; gap:10px;}
+  .admin-link-foot{opacity:.5;}
+  @media(max-width:720px){.foot-grid{grid-template-columns:1fr; gap:28px;}}
+
+  .float-wa{position:fixed; bottom:20px; right:20px; z-index:200; background:var(--gold); color:#20180a; width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 12px 26px rgba(0,0,0,.4);}
+  .float-wa svg{width:25px; height:25px;}
+  :focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+
+  /* ---------- DRAWERS (cart / checkout) ---------- */
+  .overlay{position:fixed; inset:0; background:rgba(8,6,4,.72); z-index:500; opacity:0; pointer-events:none; transition:opacity .25s;}
+  .overlay.open{opacity:1; pointer-events:auto;}
+  .drawer{position:fixed; top:0; right:0; height:100%; width:400px; max-width:92vw; background:var(--surface); border-left:1px solid var(--line); z-index:501; transform:translateX(100%); transition:transform .3s ease; display:flex; flex-direction:column;}
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{padding:22px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center;}
+  .drawer-head h3{font-size:17px; font-weight:600; font-style:italic;}
+  .drawer-close{background:none; border:none; color:var(--muted); font-size:22px; cursor:pointer; line-height:1;}
+  .drawer-body{flex:1; overflow-y:auto; padding:18px 22px;}
+  .drawer-foot{padding:18px 22px 22px; border-top:1px solid var(--line);}
+  .cart-item{display:flex; gap:12px; padding:14px 0; border-bottom:1px solid var(--line);}
+  .cart-item img{width:62px; height:62px; object-fit:cover; border-radius:3px; background:#000;}
+  .cart-item-info{flex:1; display:flex; flex-direction:column; gap:6px;}
+  .cart-item-name{font-size:13px; font-weight:700; line-height:1.3;}
+  .cart-item-row{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .qty-ctrl{display:flex; align-items:center; gap:8px; font-family:'IBM Plex Mono'; font-size:13px;}
+  .qty-ctrl button{width:22px; height:22px; border-radius:3px; border:1px solid var(--line); background:none; color:var(--text); cursor:pointer;}
+  .cart-remove{color:var(--muted); font-size:11.5px; text-decoration:underline; cursor:pointer; background:none; border:none; padding:0; font-family:inherit;}
+  .cart-empty{color:var(--muted); font-size:14px; text-align:center; padding:40px 10px;}
+  .cart-total-row{display:flex; justify-content:space-between; font-family:'IBM Plex Mono'; font-size:15px; font-weight:700; margin-bottom:6px;}
+  .cart-gift-hint{font-family:'IBM Plex Mono'; font-size:11px; color:var(--gold-soft); margin-bottom:14px;}
+  .payment-opts{display:flex; flex-direction:column; gap:8px; margin:14px 0;}
+  .pay-opt{display:flex; align-items:center; gap:10px; border:1px solid var(--line); border-radius:3px; padding:12px; cursor:pointer; font-size:13px; transition:border-color .2s;}
+  .pay-opt.active{border-color:var(--gold); background:rgba(204,154,68,.06);}
+  .pay-opt input{accent-color:var(--gold);}
+  .pay-detail{font-family:'IBM Plex Mono'; font-size:11.5px; color:var(--gold-soft); background:var(--surface-2); border-radius:3px; padding:10px 12px; margin-bottom:14px; display:none;}
+  .pay-detail.show{display:block;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-family:'IBM Plex Mono'; font-size:10.5px; text-transform:uppercase; color:var(--muted); margin-bottom:6px;}
+  .field input, .field select, .field textarea{width:100%; background:var(--surface-2); border:1px solid var(--line); color:var(--text); padding:10px 12px; border-radius:3px; font-family:'Inter'; font-size:14px;}
+  .field textarea{resize:vertical; min-height:70px;}
+
+  /* ---------- ADMIN ---------- */
+  .admin-screen{position:fixed; inset:0; background:var(--ink); z-index:600; overflow-y:auto; display:none;}
+  .admin-screen.open{display:block;}
+  .admin-top{position:sticky; top:0; background:var(--ink); border-bottom:1px solid var(--line); padding:16px 24px; display:flex; justify-content:space-between; align-items:center; z-index:2;}
+  .admin-wrap{max-width:960px; margin:0 auto; padding:30px 24px 80px;}
+  .admin-login{max-width:340px; margin:120px auto; text-align:center;}
+  .admin-login h2{margin-bottom:18px; font-size:22px; font-style:italic;}
+  .admin-tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px;}
+  .admin-tab{font-family:'IBM Plex Mono'; font-size:11.5px; text-transform:uppercase; padding:9px 16px; border-radius:100px; border:1px solid var(--line); color:var(--muted); background:none; cursor:pointer;}
+  .admin-tab.active{background:var(--text); color:var(--ink); border-color:var(--text);}
+  .admin-panel{display:none;}
+  .admin-panel.active{display:block;}
+  .admin-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--line); border:1px solid var(--line); margin-bottom:28px;}
+  .admin-stats > div{background:var(--surface); padding:20px; text-align:center;}
+  .admin-stats .big{font-family:'Fraunces'; font-weight:700; font-size:23px; color:var(--gold);}
+  .admin-stats .small{font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--muted); text-transform:uppercase; margin-top:6px;}
+  @media(max-width:600px){.admin-stats{grid-template-columns:1fr;}}
+  .admin-row{display:flex; gap:14px; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:3px; padding:14px; margin-bottom:10px; flex-wrap:wrap;}
+  .admin-row img{width:46px; height:46px; object-fit:cover; border-radius:3px; background:#000;}
+  .admin-row-info{flex:1; min-width:160px;}
+  .admin-row-name{font-weight:700; font-size:13.5px;}
+  .admin-row-meta{font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--muted); margin-top:3px;}
+  .admin-row-actions{display:flex; gap:8px;}
+  .icon-link{font-family:'IBM Plex Mono'; font-size:10.5px; text-transform:uppercase; cursor:pointer; padding:6px 12px; border:1px solid var(--line); border-radius:3px; color:var(--text); background:none;}
+  .icon-link.danger{color:#e07a68; border-color:#5a2b26;}
+  .icon-link.primary{color:#20180a; background:var(--gold); border-color:var(--gold);}
+  .admin-form{background:var(--surface); border:1px solid var(--line); border-radius:3px; padding:20px; margin-bottom:24px;}
+  .admin-form h4{margin-bottom:16px; font-size:14.5px; font-style:italic; font-weight:600;}
+  .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
+  .toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); z-index:700; background:var(--gold); color:#20180a; font-weight:700; font-size:13px; padding:12px 20px; border-radius:3px; opacity:0; pointer-events:none; transition:all .25s;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .install-banner{position:fixed; bottom:16px; left:16px; right:16px; max-width:420px; margin:0 auto; z-index:400; background:var(--surface); border:1px solid var(--line); border-radius:3px; padding:16px 18px; display:none; align-items:center; gap:14px; box-shadow:0 20px 40px rgba(0,0,0,.4);}
+  .install-banner.show{display:flex;}
+  .install-banner p{margin:0; font-size:12.5px; flex:1;}
+  .install-banner .close-install{background:none; border:none; color:var(--muted); font-size:18px; cursor:pointer;}
+</style>
+</head>
+<body>
+
+<div class="promo-bar" id="promo-bar"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">Shoes <span>Empire</span></div>
+    <div class="nav-links">
+      <a href="#collection">Collection</a>
+      <a href="#nouveautes">Nouveautés</a>
+      <a href="#club">Empire Club</a>
+      <a href="#histoire">Notre histoire</a>
+      <a href="#avis">Avis</a>
+    </div>
+    <div class="nav-icons">
+      <div class="nav-icon-wrap">
+        <button class="icon-btn" id="notif-btn" aria-label="Notifications" title="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="icon-badge" id="notif-count" style="display:none;">0</span>
+        </button>
+        <div class="notif-panel" id="notif-panel">
+          <div class="notif-head">Notifications</div>
+          <div class="notif-list" id="notif-list"><div class="notif-empty">Rien pour l'instant.</div></div>
+        </div>
+      </div>
+      <button class="icon-btn" id="wish-btn" aria-label="Ma liste" title="Ma liste">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.8 8.6c0 4.5-4.8 7.9-8.8 11-4-3.1-8.8-6.5-8.8-11a5 5 0 0 1 8.8-3.2 5 5 0 0 1 8.8 3.2z"/></svg>
+        <span class="icon-badge" id="wish-count" style="display:none;">0</span>
+      </button>
+      <button class="icon-btn" id="cart-btn" aria-label="Panier" title="Mon panier">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h2l2.4 12.4a2 2 0 0 0 2 1.6h7.2a2 2 0 0 0 2-1.6L20 8H6"/><circle cx="9" cy="21" r="1"/><circle cx="17" cy="21" r="1"/></svg>
+        <span class="icon-badge" id="cart-count" style="display:none;">0</span>
+      </button>
+      <a class="nav-cta" href="https://wa.me/22942924984?text=Bonjour%20Shoes%20Empire" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-collage" aria-hidden="true">
+    <img src="images/af1-orange-sole.jpg" alt=""><img src="images/nb-9060-blue.jpg" alt=""><img src="images/aj4-white-navy.jpg" alt="">
+    <img src="images/adidas-campus-black.jpg" alt=""><img src="images/nb-530-white.jpg" alt=""><img src="images/af1-cream-red.jpg" alt="">
+  </div>
+  <div class="wrap hero-inner">
+    <div>
+      <div class="eyebrow">Cotonou · Livraison dans tout le Bénin</div>
+      <h1>La paire qui<br><b>fait le pas.</b></h1>
+      <p class="lede">Une sélection resserrée de sneakers vérifiées — Nike, New Balance, Air Jordan, Adidas. Choisie à la main, livrée chez vous en 24 à 72h.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#collection">Voir la collection</a>
+        <a class="btn btn-outline" href="#quiz">Trouver ma paire</a>
+      </div>
+    </div>
+    <div class="founder-note">
+      <div class="fn-label">Note du fondateur</div>
+      <p>"Chaque paire qui sort d'ici, je la choisirais pour moi-même."</p>
+      <div class="fn-sign">— Shoes Empire, Cotonou</div>
+    </div>
+  </div>
+</header>
+
+<div class="marquee" aria-hidden="true">
+  <span>SÉLECTION VÉRIFIÉE <b>·</b> LIVRAISON PARTOUT AU BÉNIN <b>·</b> PAIEMENT À LA RÉCEPTION <b>·</b> NIKE · NEW BALANCE · AIR JORDAN · ADIDAS <b>·</b> SÉLECTION VÉRIFIÉE <b>·</b> LIVRAISON PARTOUT AU BÉNIN <b>·</b> PAIEMENT À LA RÉCEPTION <b>·</b> NIKE · NEW BALANCE · AIR JORDAN · ADIDAS <b>·</b></span>
+</div>
+
+<div class="trust" id="trust-strip"></div>
+
+<section id="collection">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow-sm mono">La sélection</span>
+        <h2>La collection</h2>
+      </div>
+      <p class="sec-sub">Chaque modèle est contrôlé avant l'envoi — qualité, propreté, conformité de la pointure.</p>
+    </div>
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-filter="all">Tout voir</button>
+      <button class="filter-btn" data-filter="af1">Air Force 1</button>
+      <button class="filter-btn" data-filter="nb">New Balance</button>
+      <button class="filter-btn" data-filter="aj">Air Jordan</button>
+      <button class="filter-btn" data-filter="autres">Adidas &amp; Autres</button>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section id="gift" style="padding-top:0;">
+  <div class="wrap">
+    <div class="gift-banner">
+      <div>
+        <div class="gt">Un geste pour vous, pour commencer.</div>
+        <div class="gd" id="gift-text">Sur votre première commande, un petit cadeau vous attend — dites simplement "première commande" en écrivant sur WhatsApp.</div>
+      </div>
+      <a class="btn btn-primary" href="https://wa.me/22942924984?text=Bonjour%20Shoes%20Empire%2C%20c%27est%20ma%20premi%C3%A8re%20commande%20!" target="_blank" rel="noopener">J'en profite</a>
+    </div>
+  </div>
+</section>
+
+<section id="nouveautes">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow-sm mono">Avant-première</span>
+        <h2>Les derniers arrivages</h2>
+      </div>
+      <p class="sec-sub">Vus ici avant tout le monde. Commandez directement, ou réservez votre pointure pendant qu'il en reste.</p>
+    </div>
+    <div class="grid" id="new-grid"></div>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow-sm mono">30 secondes</span>
+        <h2>Trouve ta paire</h2>
+      </div>
+      <p class="sec-sub">Trois questions rapides, une sélection qui vous ressemble.</p>
+    </div>
+    <div class="quiz-box">
+      <div class="quiz-progress"><span><i id="qp1"></i></span><span><i id="qp2"></i></span><span><i id="qp3"></i></span></div>
+
+      <div class="quiz-step" id="q-step-1">
+        <div class="quiz-q">Quel style vous ressemble le plus ?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-cat="af1">Épuré, streetwear</button>
+          <button class="quiz-opt" data-cat="nb">Rétro, confort</button>
+          <button class="quiz-opt" data-cat="aj">Sport, iconique</button>
+          <button class="quiz-opt" data-cat="autres">Original, coloré</button>
+        </div>
+      </div>
+
+      <div class="quiz-step hide" id="q-step-2">
+        <div class="quiz-q">Vous les portez surtout pour...</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-usage="quotidien">Le quotidien</button>
+          <button class="quiz-opt" data-usage="sortie">Les sorties</button>
+          <button class="quiz-opt" data-usage="collection">La collection</button>
+        </div>
+      </div>
+
+      <div class="quiz-step hide" id="q-step-3">
+        <div class="quiz-q">Un budget en tête ?</div>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-budget="all">Peu importe, si le style est là</button>
+          <button class="quiz-opt" data-budget="low">Le plus raisonnable possible</button>
+        </div>
+      </div>
+
+      <div class="quiz-result" id="quiz-result">
+        <div class="quiz-q">Notre sélection pour vous :</div>
+        <a class="btn btn-primary" id="quiz-cta" href="#collection">Voir ces modèles</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="club">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow-sm mono">Appartenance</span>
+        <h2>Empire Club</h2>
+      </div>
+      <p class="sec-sub">1 point pour chaque FCFA dépensé. Vos points s'accumulent commande après commande — comme un petit capital qui grandit sans effort.</p>
+    </div>
+    <div class="member-card">
+      <div class="mc-label">Carte membre</div>
+      <div class="mc-points" id="loyalty-points">0 pts</div>
+      <div class="mc-tier" id="loyalty-tier-label">Palier Bronze</div>
+      <div class="tier-track">
+        <div id="tier-bar-1"></div><div id="tier-bar-2"></div><div id="tier-bar-3"></div>
+      </div>
+      <div class="tier-labels"><span>Bronze</span><span>Argent · 10k</span><span>Or · 30k</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="histoire">
+  <div class="wrap">
+    <div class="story">
+      <div class="story-img"><img src="images/af1-undefeated.jpg" alt="Sneakers Shoes Empire"></div>
+      <div>
+        <span class="eyebrow-sm mono">Notre histoire</span>
+        <h2 style="font-size:30px; margin:8px 0 20px;">Pourquoi Shoes Empire</h2>
+        <p>On a commencé avec une idée simple : à Cotonou, trouver une paire authentique, dans le bon état, au bon prix, ne devrait pas être un pari. Chaque modèle qui entre dans notre stock est inspecté avant d'être mis en ligne.</p>
+        <p>On préfère un catalogue resserré mais fiable à un catalogue immense où l'on ne sait plus ce qu'on reçoit. C'est plus lent à construire, mais c'est la seule façon de faire durer la confiance.</p>
+        <div class="sig">Shoes Empire</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="avis">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow-sm mono">Preuve par les clients</span>
+        <h2>Ce qu'on dit de nous</h2>
+      </div>
+    </div>
+    <div class="review-grid" id="review-grid">
+      <div class="review-card">
+        <div class="review-photo"><img src="images/review-nike-photo.jpg" alt="Client avec sa paire reçue"></div>
+        <p class="review-quote">"Merci encore pour votre confiance, j'espère avoir plus de commandes de vous." — "Bien sûr, merci à vous."</p>
+        <div class="review-who">Client vérifié · Commande livrée</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-quote">"Hello, I've received the shoes. They are beautiful. Looking forward to buying more from you."</p>
+        <div class="review-who">Client vérifié · Commande livrée</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-quote">"Vos produits sont meilleurs ! Bravo 🤝👍👏"</p>
+        <div class="review-who">Guy Mubengu · Client vérifié</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-quote">"J'ai reçu ma commande, merci beaucoup, beau travail. Je commanderai d'autres, in challah."</p>
+        <div class="review-who">Client vérifié · Commande livrée</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-quote">"You have done amazing job, your hardwork and dedication is seen. Thank you for being so cooperative."</p>
+        <div class="review-who">Client vérifié · Commande livrée</div>
+      </div>
+      <div class="review-card review-card-cta">
+        <p style="color:var(--muted); font-size:13px; margin:0 0 6px;">Toi aussi, envoie ta photo ou ton avis après réception.</p>
+        <a class="btn btn-outline" href="https://wa.me/22942924984" target="_blank" rel="noopener">Envoyer mon avis</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="comment">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="eyebrow-sm mono">Le process</span><h2>Comment commander</h2></div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n mono">01</div><h3>Choisissez</h3><p>Parcourez la collection et repérez le modèle et la pointure qui vous intéressent.</p></div>
+      <div class="step"><div class="n mono">02</div><h3>Ajoutez au panier</h3><p>Une ou plusieurs paires — le récapitulatif part sur WhatsApp en un clic, avec le mode de paiement de votre choix.</p></div>
+      <div class="step"><div class="n mono">03</div><h3>Recevez</h3><p>Livraison partout au Bénin sous 24 à 72h. Paiement à la livraison ou par Mobile Money.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head"><div><span class="eyebrow-sm mono">Questions</span><h2>FAQ</h2></div></div>
+    <div id="faq-list">
+      <div class="faq-item"><button class="faq-q">Combien de temps prend la livraison ?<span class="plus">+</span></button><div class="faq-a"><p>24 à 48h sur Cotonou et environs, jusqu'à 72h pour les autres villes du Bénin.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Comment je paie ?<span class="plus">+</span></button><div class="faq-a"><p>Paiement à la livraison (espèces) ou par Mobile Money (MTN MoMo, Moov Money, Celtiis Cash). Vous confirmez le mode au moment de la commande.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Puis-je échanger si la pointure ne va pas ?<span class="plus">+</span></button><div class="faq-a"><p>Contactez-nous sur WhatsApp dans les 48h suivant la réception, on trouve une solution ensemble.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Livrez-vous en dehors de Cotonou ?<span class="plus">+</span></button><div class="faq-a"><p>Oui, partout au Bénin. Le délai varie selon la ville — précisez la vôtre sur WhatsApp.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo">Shoes <span>Empire</span></div>
+        <p>La maison sneakers de Cotonou. Sélection vérifiée, prix justes, livraison rapide partout au Bénin.</p>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul><li><a href="#collection">Collection</a></li><li><a href="#club">Empire Club</a></li><li><a href="https://wa.me/22942924984" target="_blank" rel="noopener">WhatsApp</a></li></ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul><li>Cotonou, Bénin</li><li>WhatsApp : 01 42 92 49 84</li><li>Livraison dans tout le Bénin</li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Shoes Empire — Cotonou</span>
+      <span>Fait avec soin au Bénin 🇧🇯 · <a class="admin-link-foot" href="#admin">Espace admin</a></span>
+    </div>
+  </div>
+</footer>
+
+<a class="float-wa" href="https://wa.me/22942924984" target="_blank" rel="noopener" aria-label="Commander sur WhatsApp">
+  <svg viewBox="0 0 24 24" fill="#20180a"><path d="M17.6 6.32A7.85 7.85 0 0 0 12.05 4a7.94 7.94 0 0 0-6.9 11.9L4 20l4.2-1.1a7.9 7.9 0 0 0 3.85 1h.01a7.94 7.94 0 0 0 5.6-13.58zM12.06 18.4h-.01a6.6 6.6 0 0 1-3.36-.92l-.24-.14-2.5.66.67-2.43-.16-.25a6.6 6.6 0 0 1 10.2-8.2 6.55 6.55 0 0 1 1.94 4.67 6.62 6.62 0 0 1-6.54 6.6zm3.6-4.94c-.2-.1-1.17-.58-1.35-.64-.18-.07-.32-.1-.45.1-.13.2-.5.64-.62.77-.11.13-.23.14-.43.05-.2-.1-.83-.3-1.58-.97-.58-.52-.98-1.16-1.1-1.36-.11-.2-.01-.3.09-.4.09-.1.2-.23.3-.35.1-.11.13-.2.2-.32.06-.13.03-.24-.02-.34-.05-.1-.45-1.08-.62-1.48-.16-.39-.33-.33-.45-.34h-.38c-.13 0-.34.05-.52.24-.18.2-.68.66-.68 1.62 0 .95.7 1.87.79 2 .1.13 1.37 2.1 3.32 2.94.46.2.83.32 1.11.41.47.15.9.13 1.24.08.38-.06 1.17-.48 1.33-.94.17-.46.17-.86.12-.94-.05-.09-.18-.14-.38-.24z"/></svg>
+</a>
+
+<!-- CART -->
+<div class="overlay" id="cart-overlay"></div>
+<div class="drawer" id="cart-drawer">
+  <div class="drawer-head"><h3>Mon panier</h3><button class="drawer-close" id="cart-close">×</button></div>
+  <div class="drawer-body" id="cart-body"></div>
+  <div class="drawer-foot" id="cart-foot" style="display:none;">
+    <div class="cart-gift-hint" id="cart-gift-hint"></div>
+    <div class="cart-total-row"><span>Total</span><span id="cart-total">0 FCFA</span></div>
+    <button class="btn btn-primary btn-block" id="cart-checkout">Passer la commande</button>
+  </div>
+</div>
+
+<!-- CHECKOUT -->
+<div class="overlay" id="pay-overlay"></div>
+<div class="drawer" id="pay-drawer">
+  <div class="drawer-head"><h3>Finaliser la commande</h3><button class="drawer-close" id="pay-close">×</button></div>
+  <div class="drawer-body">
+    <div class="field"><label>Votre nom</label><input type="text" id="pay-name" placeholder="Votre nom complet"></div>
+    <div class="field"><label>Ville de livraison</label><input type="text" id="pay-city" placeholder="Ex : Cotonou"></div>
+    <div class="field"><label>Mode de paiement souhaité</label>
+      <div class="payment-opts" id="payment-opts"></div>
+      <div class="pay-detail" id="pay-detail-box"></div>
+    </div>
+  </div>
+  <div class="drawer-foot"><button class="btn btn-primary btn-block" id="pay-confirm">Envoyer la commande sur WhatsApp</button></div>
+</div>
+
+<!-- WISHLIST -->
+<div class="overlay" id="wish-overlay"></div>
+<div class="drawer" id="wish-drawer">
+  <div class="drawer-head"><h3>Ma liste</h3><button class="drawer-close" id="wish-close">×</button></div>
+  <div class="drawer-body" id="wish-body"></div>
+</div>
+
+<!-- ADMIN -->
+<div class="admin-screen" id="admin-screen">
+  <div class="admin-top">
+    <div class="logo">Shoes <span>Empire</span> · Admin</div>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span class="mono" id="admin-sync-badge" style="font-size:10.5px; color:var(--muted);"></span>
+      <button class="icon-link" id="admin-close">Fermer ×</button>
+    </div>
+  </div>
+  <div class="admin-wrap">
+    <div class="admin-login" id="admin-login">
+      <h2>Espace admin</h2>
+      <div class="field" id="admin-email-field" style="display:none;"><input type="email" id="admin-email" placeholder="Email admin"></div>
+      <div class="field"><input type="password" id="admin-pass" placeholder="Mot de passe"></div>
+      <button class="btn btn-primary btn-block" id="admin-login-btn">Se connecter</button>
+      <p id="admin-login-error" style="color:#e07a68; font-size:12.5px; margin-top:10px; display:none;">Identifiants incorrects.</p>
+      <p id="admin-sync-status" class="mono" style="color:var(--muted); font-size:11px; margin-top:16px;"></p>
+    </div>
+
+    <div id="admin-dashboard" style="display:none;">
+      <div class="admin-stats">
+        <div><div class="big" id="stat-visits">0</div><div class="small">Visites</div></div>
+        <div><div class="big" id="stat-cart">0</div><div class="small">Ajouts panier</div></div>
+        <div><div class="big" id="stat-orders">0</div><div class="small">Commandes</div></div>
+      </div>
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="products">Produits</button>
+        <button class="admin-tab" data-tab="marketing">Marketing</button>
+        <button class="admin-tab" data-tab="reviews">Avis</button>
+        <button class="admin-tab" data-tab="settings">Réglages</button>
+      </div>
+
+      <div class="admin-panel active" id="panel-products">
+        <div class="admin-form">
+          <h4>Ajouter un produit</h4>
+          <div class="form-grid">
+            <div class="field"><label>Nom</label><input type="text" id="p-name"></div>
+            <div class="field"><label>Marque / tag</label><input type="text" id="p-tag" placeholder="Ex : NIKE"></div>
+            <div class="field"><label>Catégorie</label>
+              <select id="p-cat"><option value="af1">Air Force 1</option><option value="nb">New Balance</option><option value="aj">Air Jordan</option><option value="autres">Adidas &amp; Autres</option></select>
+            </div>
+            <div class="field"><label>Prix (FCFA, vide = sur demande)</label><input type="text" id="p-price" placeholder="Ex : 14000"></div>
+            <div class="field"><label>Stock (vide = illimité)</label><input type="text" id="p-stock" placeholder="Ex : 3"></div>
+            <div class="field"><label>Image (chemin dans /images)</label><input type="text" id="p-img" placeholder="images/mon-produit.jpg"></div>
+            <div class="field"><label>Statut</label><select id="p-new"><option value="no">Catalogue normal</option><option value="yes">Nouveauté (avant-première)</option></select></div>
+          </div>
+          <button class="icon-link primary" id="p-add-btn">Ajouter le produit</button>
+        </div>
+        <div id="admin-products-list"></div>
+      </div>
+
+      <div class="admin-panel" id="panel-marketing">
+        <div class="admin-form">
+          <h4>Offre en cours (bandeau + compte à rebours)</h4>
+          <div class="form-grid">
+            <div class="field"><label>Texte du bandeau</label><input type="text" id="m-promo-text" placeholder="Ex : Livraison offerte dès 2 paires"></div>
+            <div class="field"><label>Fin de l'offre (date et heure)</label><input type="datetime-local" id="m-promo-end"></div>
+          </div>
+          <button class="icon-link primary" id="m-promo-save">Enregistrer l'offre</button>
+        </div>
+        <div class="admin-form">
+          <h4>Cadeau de bienvenue (réciprocité)</h4>
+          <div class="field"><label>Description affichée sur le site</label><textarea id="m-gift-text"></textarea></div>
+          <button class="icon-link primary" id="m-gift-save">Enregistrer</button>
+        </div>
+      </div>
+
+      <div class="admin-panel" id="panel-reviews">
+        <div class="admin-form">
+          <h4>Ajouter un avis client</h4>
+          <div class="form-grid">
+            <div class="field"><label>Nom du client</label><input type="text" id="rv-who" placeholder="Ex : Client vérifié"></div>
+            <div class="field"><label>Note (1 à 5)</label><input type="text" id="rv-stars" placeholder="5"></div>
+          </div>
+          <div class="field"><label>Avis</label><textarea id="rv-quote"></textarea></div>
+          <button class="icon-link primary" id="rv-add-btn">Ajouter l'avis</button>
+        </div>
+        <div id="admin-reviews-list"></div>
+      </div>
+
+      <div class="admin-panel" id="panel-settings">
+        <div class="admin-form">
+          <h4>Numéros de paiement</h4>
+          <div class="form-grid">
+            <div class="field"><label>Numéro WhatsApp (sans +)</label><input type="text" id="s-wa"></div>
+            <div class="field"><label>Numéro MTN MoMo</label><input type="text" id="s-momo"></div>
+            <div class="field"><label>Numéro Moov Money</label><input type="text" id="s-moov"></div>
+            <div class="field"><label>Numéro Celtiis Cash</label><input type="text" id="s-celtiis"></div>
+          </div>
+          <button class="icon-link primary" id="s-save-btn">Enregistrer</button>
+        </div>
+        <div class="admin-form">
+          <h4>Changer le mot de passe admin</h4>
+          <div class="field"><input type="password" id="s-newpass" placeholder="Nouveau mot de passe"></div>
+          <button class="icon-link" id="s-pass-btn">Changer le mot de passe</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="install-banner" id="install-banner">
+  <p>Installez Shoes Empire comme application pour commander plus vite.</p>
+  <button class="icon-link primary" id="install-btn">Installer</button>
+  <button class="close-install" id="install-close">×</button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

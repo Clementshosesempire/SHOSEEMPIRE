@@ -1,0 +1,14 @@
+{
+  "name": "Shoes Empire",
+  "short_name": "Shoes Empire",
+  "description": "Sneakers premium à Cotonou — Nike, New Balance, Air Jordan, Adidas. Livraison partout au Bénin.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#14110d",
+  "theme_color": "#14110d",
+  "lang": "fr",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
